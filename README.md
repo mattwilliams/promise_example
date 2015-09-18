@@ -3,5 +3,6 @@
 <ul>
 	<li>clone the repository</li>
 	<li>npm install</li>
+	<li>node index.js</li>
 	<li>open http://localhost:8000 in your browser</li>
 </ul>
