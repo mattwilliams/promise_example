@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<style type="text/css">
+			html { height: 100% }
+			body { height: 100%; margin: 20px; padding: 10 }
+			input[type=button] {
+				border: 1px solid #666;
+				background-color: #E7F5DC;
+				padding: 8px;
+			}
+			#in-between-text{
+				color: red;
+			}
+		</style>
+		<title>Bare Bones Promise</title>
+	</head>
+	
+	<body>
+		<h4>Bare Bones Concurrent Promises</h4>
+		<input id="btn" type="button" value="two concurrent promises"/>
+	  
+		<div id="results">
+			<p id="a">Promise A results</p>
+			<p id="in-between-text"></p>
+			<p id="b">Promise B results</p>
+		</div>
+		
+		<script src="javascript/jquery-2.1.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>		
+		<script src="javascript/promise-6.1.0.js"></script>
+		
+		<script type="text/javascript">
+
+		$('#btn').on('click', function(e){
+			
+			var promiseA = new Promise(function (resolve, reject) {
+				$.ajax({
+					method: "GET",
+					url: "http://localhost:8000/a"
+				})
+				.done(function( data ) {
+					resolve(data.text);
+				})
+				.error(function(err){
+				  reject(err);
+			  	});
+			});
+
+			var promiseB = new Promise(function (resolve, reject) {
+				$.ajax({
+					method: "GET",
+					url: "http://localhost:8000/b"
+				})
+				.done(function( data ) {
+					resolve(data.text);
+				})
+				.error(function(err){
+					reject(err);
+				});
+			});
+			
+			Promise.all([promiseA, promiseB])
+				.then(function (result) {
+				
+					$('#a').text(result[0]);
+				
+					$('#in-between-text').text("==========Put something in between========");
+				
+					$('#b').text(result[1]);
+				
+				})
+				.catch(function (err) {
+					console.log(err.statusText);
+					console.log("error");
+				});
+			});
+			</script>
+			
+	</body>
+</html>
+
+
